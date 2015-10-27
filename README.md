@@ -255,3 +255,30 @@ int main(int argc, char **argv)
 
   return EXIT_SUCCESS;
 }
+
+
+-----------------------------------------------
+int lsh_ifconfig(char **args)
+{
+FILE *fp;
+  if (args[1] == NULL) {
+	  char returnData [64];
+	  fp = popen ("/sbin/ifconfig eth0", "r");
+	  
+while (fgets (returnData, 64, fp) != NULL)
+	{
+	
+		printf("%s", returnData);
+	
+	
+	}
+	
+pclose(fp);
+ } else {
+    if (chdir(args[1]) != 0) {
+      perror("lsh");
+    }
+  }	
+  return 1;
+}
+
