@@ -76,6 +76,27 @@ int lsh_pw(char **args)
 }
 
 
+
+
+
+
+------ggggg---------------
+oooooo
+
+
+gid_t gid;
+struct group *grp;
+
+if((gid = getgid()) < 0){
+
+		
+	perror("unable to get the group id");
+	}
+	else{
+		grp = getgrgid(gid);
+		puts(grp->gr_name);
+	}
+
 /////////////////////put pw function here
 
 /*********************lsh_ifconfig************/
