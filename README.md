@@ -353,3 +353,24 @@ int main ()
 
   return 0;
 }
+
+
+-----------hfhfhfghfghfghfghfghfhgh-------
+int lsh_ud(char **args)
+{
+	//Get group ID
+	int gid = getgid();
+	
+	
+	//Get current username
+	char *usrnm;
+	usrnm=(char *)malloc(10*sizeof(char));
+	usrnm=getlogin();
+	//node
+
+	
+	printf("%i, %s\n",gid,usrnm);
+
+	return 1;
+
+}
