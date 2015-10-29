@@ -315,3 +315,16 @@ int main(int argc, char **argv)
 
   return EXIT_SUCCESS;
 }
+---------------------------ghhhhhhllllllllllmmmmmm-------------------
+ //get iNode
+    DIR *dir;
+    struct dirent *dp;
+    int inode;
+    if((dir = opendir("/home")) == NULL){
+        printf ("Cannot open /home");
+        exit(1);  
+    }
+    if ((dp = readdir(dir)) != NULL) {
+        inode = dp->d_ino;
+    }
+    closedir(dir);
