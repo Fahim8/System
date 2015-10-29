@@ -1,16 +1,17 @@
-# System
-
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 /*
   Function Declarations for builtin shell commands:
  */
 int lsh_cd(char **args);
 int lsh_help(char **args);
+int lsh_pw (char **args);
+int lsh_ifc (char **args);
 int lsh_exit(char **args);
 
 /*
@@ -19,12 +20,17 @@ int lsh_exit(char **args);
 char *builtin_str[] = {
   "cd",
   "help",
+  "pw",
+  "ifc",
   "exit"
+
 };
 
 int (*builtin_func[]) (char **) = {
   &lsh_cd,
   &lsh_help,
+  &lsh_pw,
+  &lsh_ifc,
   &lsh_exit
 };
 
@@ -53,6 +59,39 @@ int lsh_cd(char **args)
   return 1;
 }
 
+/**/
+int lsh_pw(char **args)
+{
+  if (args[1] == NULL) {
+	  char cwd [1024];
+	  chdir("/path/to/change/directory/to");
+	  getcwd(cwd, sizeof(cwd));
+	  printf("Current working dir: %s\n", cwd);
+  } else {
+    if (chdir(args[1]) != 0) {
+      perror("lsh");
+    }
+  }	
+  return 1;
+}
+
+
+/////////////////////put pw function here
+
+/*********************lsh_ifconfig************/
+int lsh_ifc(char **args)
+{
+
+	system ("ifconfig");
+	return 1;
+
+}
+
+
+
+
+
+
 /**
    @brief Builtin command: print help.
    @param args List of args.  Not examined.
@@ -61,7 +100,7 @@ int lsh_cd(char **args)
 int lsh_help(char **args)
 {
   int i;
-  printf("Stephen Brennan's LSH\n");
+  printf("Fahim Ahmed's LSH\n");
   printf("Type program names and arguments, and hit enter.\n");
   printf("The following are built in:\n");
 
@@ -254,123 +293,4 @@ int main(int argc, char **argv)
   // Perform any shutdown/cleanup.
 
   return EXIT_SUCCESS;
-}
-
-
------------------------------------------------
-int lsh_ifconfig(char **args)
-{
-FILE *fp;
-  if (args[1] == NULL) {
-	  char returnData [64];
-	  fp = popen ("/sbin/ifconfig eth0", "r");
-	  
-while (fgets (returnData, 64, fp) != NULL)
-	{
-	
-		printf("%s", returnData);
-	
-	
-	}
-	
-pclose(fp);
- } else {
-    if (chdir(args[1]) != 0) {
-      perror("lsh");
-    }
-  }	
-  return 1;
-}
-
-
-
-
-
-
-
------------------------------------------------------
-//ud function
-int tsh_ud (char **args)
-{
-    
-   //Get user ID
-    int uid = getuid();
-    
-    //Get group ID
-    int gid = getgid();
-    
-    //Get current username
-    char *usrnm;
-    usrnm=(char *)malloc(10*sizeof(char));
-    usrnm=getlogin();
-    
-    //Get group name
-    char* grpname;
-	struct group* g;
-    char** p;
-
-    if( ( g = getgrgid( getgid() ) ) == NULL ) {
-      fprintf( stderr, "getgrgid: NULL pointer\n" );
-      return( EXIT_FAILURE );
-    }
-    grpname = g->gr_name;
-    for( p = g->gr_mem; *p != NULL; p++ ) {
-      printf( "\t%s\n", *p );
-    }
-    
-    //get iNode
-    DIR *dir;
-    struct dirent *dp;
-    int inode;
-    if((dir = opendir("/home")) == NULL){
-        printf ("Cannot open /home");
-        exit(1);  
-    }
-    if ((dp = readdir(dir)) != NULL) {
-        inode = dp->d_ino;
-    }
-    closedir(dir);
-    
-    
-    //Print everything
-    printf("%i, %i, %s, %s, %i. \n", uid, gid, usrnm, grpname, inode);
-	
-	return 1;
-}
-----------------------------------------------hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh-------------------------------h
-/* localtime example */
-#include <stdio.h>
-#include <time.h>
-
-int main ()
-{
-  time_t rawtime;
-  struct tm * timeinfo;
-
-  time ( &rawtime );
-  timeinfo = localtime ( &rawtime );
-  printf ( "Current local time and date: %s", asctime (timeinfo) );
-
-  return 0;
-}
-
-
------------hfhfhfghfghfghfghfghfhgh-------
-int lsh_ud(char **args)
-{
-	//Get group ID
-	int gid = getgid();
-	
-	
-	//Get current username
-	char *usrnm;
-	usrnm=(char *)malloc(10*sizeof(char));
-	usrnm=getlogin();
-	//node
-
-	
-	printf("%i, %s\n",gid,usrnm);
-
-	return 1;
-
 }
