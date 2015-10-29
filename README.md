@@ -282,3 +282,58 @@ pclose(fp);
   return 1;
 }
 
+
+
+
+
+
+
+-----------------------------------------------------
+//ud function
+int tsh_ud (char **args)
+{
+    
+   //Get user ID
+    int uid = getuid();
+    
+    //Get group ID
+    int gid = getgid();
+    
+    //Get current username
+    char *usrnm;
+    usrnm=(char *)malloc(10*sizeof(char));
+    usrnm=getlogin();
+    
+    //Get group name
+    char* grpname;
+	struct group* g;
+    char** p;
+
+    if( ( g = getgrgid( getgid() ) ) == NULL ) {
+      fprintf( stderr, "getgrgid: NULL pointer\n" );
+      return( EXIT_FAILURE );
+    }
+    grpname = g->gr_name;
+    for( p = g->gr_mem; *p != NULL; p++ ) {
+      printf( "\t%s\n", *p );
+    }
+    
+    //get iNode
+    DIR *dir;
+    struct dirent *dp;
+    int inode;
+    if((dir = opendir("/home")) == NULL){
+        printf ("Cannot open /home");
+        exit(1);  
+    }
+    if ((dp = readdir(dir)) != NULL) {
+        inode = dp->d_ino;
+    }
+    closedir(dir);
+    
+    
+    //Print everything
+    printf("%i, %i, %s, %s, %i. \n", uid, gid, usrnm, grpname, inode);
+	
+	return 1;
+}
